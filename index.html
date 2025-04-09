@@ -76,14 +76,17 @@
 
         .preview {
             width: 80%;
+            max-width: 600px;
             height: 300px;
             border: 2px solid #0056b3;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #0056b3;
-            font-size: 24px;
             margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .preview iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
         .download-button {
@@ -100,6 +103,22 @@
             background-color: #0056b3;
             color: #fff;
         }
+
+        .back-button {
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            color: #0056b3;
+            text-decoration: none;
+            border: 2px solid #0056b3;
+            border-radius: 20px;
+            font-size: 18px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -113,17 +132,28 @@
 
         <!-- Страница урока -->
         <div id="lesson-page">
+            <a href="#" class="back-button" onclick="goBack()">Назад</a>
             <h2 id="lesson-title"></h2>
-            <div class="preview">PREVIEW</div>
+            <div class="preview" id="preview-area">
+                <iframe id="preview-iframe" src=""></iframe>
+            </div>
             <a id="download-link" class="download-button" href="#">Установить материалы</a>
         </div>
     </div>
 
     <script>
-        // Пример данных (в реальном проекте это будет загружаться из файла lessons.json)
+        // Данные о презентациях (включая публичную ссылку для предпросмотра)
         const lessons = [
-            { "name": "Глагол", "file": "glagol.pptx" },
-            { "name": "НЕ с глаголами", "file": "pravopisanie_ne_s_glagolami_o_5_kl.ppt" }
+            { 
+                "name": "Глагол", 
+                "file": "glagol.pptx", 
+                "previewUrl": "https://onedrive.live.com/embed?cid=YOUR_CID&resid=YOUR_RESID&authkey=YOUR_AUTHKEY" 
+            },
+            { 
+                "name": "НЕ с глаголами", 
+                "file": "pravopisanie_ne_s_glagolami_o_5_kl.pptx", 
+                "previewUrl": "https://drive.google.com/file/d/1xyfqDo_gt7bPMeZFdt91H1divbO0jVyf/view" 
+            }
         ];
 
         // Функция для отображения кнопок на главной странице
@@ -134,20 +164,30 @@
                 button.className = 'button';
                 button.textContent = lesson.name;
                 button.href = '#';
-                button.onclick = () => showLessonPage(lesson.name, lesson.file);
+                button.onclick = () => showLessonPage(lesson.name, lesson.file, lesson.previewUrl);
                 buttonsContainer.appendChild(button);
             });
         }
 
         // Функция для отображения страницы урока
-        function showLessonPage(name, file) {
+        function showLessonPage(name, file, previewUrl) {
             document.getElementById('main-page').style.display = 'none';
             document.getElementById('lesson-page').style.display = 'flex';
 
             document.getElementById('lesson-title').textContent = name;
+            const previewIframe = document.getElementById('preview-iframe');
+            previewIframe.src = previewUrl; // Укажи публичную ссылку для предпросмотра
             const downloadLink = document.getElementById('download-link');
             downloadLink.href = `${file}`; // Укажи правильный путь к файлам
             downloadLink.setAttribute('download', file);
+        }
+
+        // Функция для возврата на главную страницу
+        function goBack() {
+            document.getElementById('main-page').style.display = 'flex';
+            document.getElementById('lesson-page').style.display = 'none';
+            const previewIframe = document.getElementById('preview-iframe');
+            previewIframe.src = ''; // Очищаем iframe при возврате
         }
 
         // Инициализация
