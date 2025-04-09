@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сборник уроков</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        h1 {
+            color: #0056b3;
+            font-size: 36px;
+            margin-top: 20px;
+        }
+
+        #buttons-container {
+            margin: 20px 0;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            color: #0056b3;
+            text-decoration: none;
+            border: 2px solid #0056b3;
+            border-radius: 20px;
+            font-size: 18px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
+
+        footer {
+            color: #0056b3;
+            font-size: 14px;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        #lesson-page {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #lesson-title {
+            color: #0056b3;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .preview {
+            width: 80%;
+            height: 300px;
+            border: 2px solid #0056b3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #0056b3;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .download-button {
+            padding: 10px 20px;
+            color: #0056b3;
+            text-decoration: none;
+            border: 2px solid #0056b3;
+            border-radius: 20px;
+            font-size: 18px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .download-button:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Главная страница -->
+        <div id="main-page">
+            <h1>Сборник уроков</h1>
+            <div id="buttons-container"></div>
+            <footer>Pavel Tukhtin</footer>
+        </div>
+
+        <!-- Страница урока -->
+        <div id="lesson-page">
+            <h2 id="lesson-title"></h2>
+            <div class="preview">PREVIEW</div>
+            <a id="download-link" class="download-button" href="#">Установить материалы</a>
+        </div>
+    </div>
+
+    <script>
+        // Пример данных (в реальном проекте это будет загружаться из файла lessons.json)
+        const lessons = [
+            { "name": "Глагол", "file": "glagol.pptx" },
+            { "name": "НЕ с глаголами", "file": "ne_s_glagolami.ppt" }
+        ];
+
+        // Функция для отображения кнопок на главной странице
+        function displayButtons() {
+            const buttonsContainer = document.getElementById('buttons-container');
+            lessons.forEach(lesson => {
+                const button = document.createElement('a');
+                button.className = 'button';
+                button.textContent = lesson.name;
+                button.href = '#';
+                button.onclick = () => showLessonPage(lesson.name, lesson.file);
+                buttonsContainer.appendChild(button);
+            });
+        }
+
+        // Функция для отображения страницы урока
+        function showLessonPage(name, file) {
+            document.getElementById('main-page').style.display = 'none';
+            document.getElementById('lesson-page').style.display = 'flex';
+
+            document.getElementById('lesson-title').textContent = name;
+            const downloadLink = document.getElementById('download-link');
+            downloadLink.href = `path/to/presentations/${file}`; // Укажи правильный путь к файлам
+            downloadLink.setAttribute('download', file);
+        }
+
+        // Инициализация
+        displayButtons();
+    </script>
+</body>
+</html>
