@@ -123,7 +123,7 @@
         // Пример данных (в реальном проекте это будет загружаться из файла lessons.json)
         const lessons = [
             { "name": "Глагол", "file": "glagol.pptx" },
-            { "name": "НЕ с глаголами", "file": "ne_s_glagolami.ppt" }
+            { "name": "НЕ с глаголами", "file": "pravopisanie_ne_s_glagolami_o_5_kl.ppt" }
         ];
 
         // Функция для отображения кнопок на главной странице
@@ -146,7 +146,7 @@
 
             document.getElementById('lesson-title').textContent = name;
             const downloadLink = document.getElementById('download-link');
-            downloadLink.href = `path/to/presentations/${file}`; // Укажи правильный путь к файлам
+            downloadLink.href = `${file}`; // Укажи правильный путь к файлам
             downloadLink.setAttribute('download', file);
         }
 
