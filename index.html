@@ -81,12 +81,15 @@
             border: 2px solid #0056b3;
             margin-bottom: 20px;
             overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .preview iframe {
+        .preview img {
             width: 100%;
             height: 100%;
-            border: none;
+            object-fit: contain;
         }
 
         .download-button {
@@ -119,6 +122,37 @@
             background-color: #0056b3;
             color: #fff;
         }
+
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .arrow {
+            width: 40px;
+            height: 40px;
+            background-color: #0056b3;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .arrow:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .arrow:hover:not(:disabled) {
+            background-color: #003d82;
+        }
     </style>
 </head>
 <body>
@@ -135,26 +169,37 @@
             <a href="#" class="back-button" onclick="goBack()">Назад</a>
             <h2 id="lesson-title"></h2>
             <div class="preview" id="preview-area">
-                <iframe id="preview-iframe" src=""></iframe>
+                <img id="preview-image" src="" alt="Слайд">
+            </div>
+            <div class="navigation">
+                <button id="prev-arrow" class="arrow" onclick="prevSlide()">&#9664;</button>
+                <button id="next-arrow" class="arrow" onclick="nextSlide()">&#9654;</button>
             </div>
             <a id="download-link" class="download-button" href="#">Установить материалы</a>
         </div>
     </div>
 
     <script>
-        // Данные о презентациях (включая публичную ссылку для предпросмотра)
+        // Данные о презентациях
         const lessons = [
             { 
                 "name": "Глагол", 
-                "file": "glagol.pptx", 
-                "previewUrl": "https://onedrive.live.com/embed?cid=YOUR_CID&resid=YOUR_RESID&authkey=YOUR_AUTHKEY" 
+                "file": "glagol.pptx",
+                "downloadUrl": "", // Замени на реальную ссылку для скачивания
+                "slidesFolder": "images/1", // Папка с изображениями слайдов (пока заглушка)
+                "slideCount": 0 // Количество слайдов (пока 0)
             },
             { 
                 "name": "НЕ с глаголами", 
-                "file": "pravopisanie_ne_s_glagolami_o_5_kl.pptx", 
-                "previewUrl": "https://drive.google.com/file/d/1xyfqDo_gt7bPMeZFdt91H1divbO0jVyf/view" 
+                "file": "ne_s_glagolami.pptx",
+                "downloadUrl": "https://drive.google.com/uc?export=download&id=1xyfqDo_gt7bPMeZFdt91H1divbO0jVyf",
+                "slidesFolder": "images/2", // Папка с изображениями слайдов
+                "slideCount": 17 // Количество слайдов
             }
         ];
+
+        let currentSlide = 1;
+        let currentLesson = null;
 
         // Функция для отображения кнопок на главной странице
         function displayButtons() {
@@ -164,30 +209,69 @@
                 button.className = 'button';
                 button.textContent = lesson.name;
                 button.href = '#';
-                button.onclick = () => showLessonPage(lesson.name, lesson.file, lesson.previewUrl);
+                button.onclick = () => showLessonPage(lesson);
                 buttonsContainer.appendChild(button);
             });
         }
 
         // Функция для отображения страницы урока
-        function showLessonPage(name, file, previewUrl) {
+        function showLessonPage(lesson) {
             document.getElementById('main-page').style.display = 'none';
             document.getElementById('lesson-page').style.display = 'flex';
 
-            document.getElementById('lesson-title').textContent = name;
-            const previewIframe = document.getElementById('preview-iframe');
-            previewIframe.src = previewUrl; // Укажи публичную ссылку для предпросмотра
+            currentLesson = lesson;
+            currentSlide = 1;
+
+            document.getElementById('lesson-title').textContent = lesson.name;
+            updateSlide();
+
             const downloadLink = document.getElementById('download-link');
-            downloadLink.href = `${file}`; // Укажи правильный путь к файлам
-            downloadLink.setAttribute('download', file);
+            if (lesson.downloadUrl) {
+                downloadLink.href = lesson.downloadUrl;
+            } else {
+                downloadLink.href = `presentations/${lesson.file}`;
+                downloadLink.setAttribute('download', lesson.file);
+            }
+        }
+
+        // Функция для обновления текущего слайда
+        function updateSlide() {
+            const previewImage = document.getElementById('preview-image');
+            if (currentLesson.slideCount > 0) {
+                previewImage.src = `${currentLesson.slidesFolder}/${currentSlide}.jpg`;
+            } else {
+                previewImage.src = ''; // Если слайдов нет, ничего не отображаем
+            }
+
+            // Обновляем состояние стрелок
+            const prevArrow = document.getElementById('prev-arrow');
+            const nextArrow = document.getElementById('next-arrow');
+            prevArrow.disabled = currentSlide === 1;
+            nextArrow.disabled = currentSlide === currentLesson.slideCount;
+        }
+
+        // Функция для перехода к предыдущему слайду
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        // Функция для перехода к следующему слайду
+        function nextSlide() {
+            if (currentSlide < currentLesson.slideCount) {
+                currentSlide++;
+                updateSlide();
+            }
         }
 
         // Функция для возврата на главную страницу
         function goBack() {
             document.getElementById('main-page').style.display = 'flex';
             document.getElementById('lesson-page').style.display = 'none';
-            const previewIframe = document.getElementById('preview-iframe');
-            previewIframe.src = ''; // Очищаем iframe при возврате
+            currentLesson = null;
+            currentSlide = 1;
         }
 
         // Инициализация
