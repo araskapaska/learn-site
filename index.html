@@ -230,7 +230,7 @@
             updateSlide();
 
             const downloadLink = document.getElementById('download-link');
-            downloadLink.href = `presentations/${lesson.file}`;
+            downloadLink.href = `${lesson.file}`;
             downloadLink.setAttribute('download', lesson.file);
         }
 
