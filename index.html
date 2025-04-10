@@ -289,7 +289,7 @@
         function updateSlide() {
             const previewImage = document.getElementById('preview-image');
             if (currentLesson.slideCount > 0) {
-                previewImage.src = `${currentLesson.slidesFolder}/${currentSlide}.jpg`;
+                previewImage.src = `${currentSlide}.png`;
             } else {
                 previewImage.src = ''; // Если слайдов нет, ничего не отображаем
             }
