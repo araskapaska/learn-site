@@ -230,7 +230,7 @@
             },
             { 
                 "name": "Инфинитив и его грамматические свойства", 
-                "file": null, // Нет файла для скачивания
+                "file": null,
                 "slidesFolder": "",
                 "slideCount": 3,
                 "isDownloadable": false
@@ -239,7 +239,7 @@
                 "name": "Тринадцатый подвиг Геракла", 
                 "file": "iskander6.pptx",
                 "slidesFolder": "images/5",
-                "slideCount": 8, // Укажи реальное количество слайдов
+                "slideCount": 8,
                 "isDownloadable": true
             }
         ];
@@ -250,6 +250,7 @@
         // Функция для отображения кнопок на главной странице
         function displayButtons() {
             const buttonsContainer = document.getElementById('buttons-container');
+            buttonsContainer.innerHTML = ''; // Очищаем контейнер перед добавлением кнопок
             lessons.forEach(lesson => {
                 const button = document.createElement('a');
                 button.className = 'button';
@@ -262,7 +263,7 @@
 
         // Функция для отображения страницы урока
         function showLessonPage(lesson) {
-            document.getElementById('main-page').style.display = 'none-0;
+            document.getElementById('main-page').style.display = 'none';
             document.getElementById('lesson-page').style.display = 'flex';
 
             currentLesson = lesson;
