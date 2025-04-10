@@ -84,6 +84,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            cursor: pointer;
         }
 
         .preview img {
@@ -153,6 +154,25 @@
         .arrow:hover:not(:disabled) {
             background-color: #003d82;
         }
+
+        .fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .fullscreen img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
     </style>
 </head>
 <body>
@@ -175,7 +195,12 @@
                 <button id="prev-arrow" class="arrow" onclick="prevSlide()">◀</button>
                 <button id="next-arrow" class="arrow" onclick="nextSlide()">▶</button>
             </div>
-            <a id="download-link" class="download-button" href="#">Установить материалы</a>
+            <div id="download-button-container"></div>
+        </div>
+
+        <!-- Полноэкранный просмотр -->
+        <div id="fullscreen-view" class="fullscreen" style="display: none;">
+            <img id="fullscreen-image" src="" alt="Слайд">
         </div>
     </div>
 
@@ -186,19 +211,36 @@
                 "name": "Глагол", 
                 "file": "glagol.pptx",
                 "slidesFolder": "images/1",
-                "slideCount": 0 // Укажи количество слайдов, если есть
+                "slideCount": 0,
+                "isDownloadable": true
             },
             { 
                 "name": "НЕ с глаголами", 
                 "file": "ne_s_glagolami.pptx",
                 "slidesFolder": "images/2",
-                "slideCount": 17
+                "slideCount": 17,
+                "isDownloadable": true
             },
             { 
                 "name": "Девочка, с которой ничего не случится", 
                 "file": "k.bulychev_5_klass.pptx",
                 "slidesFolder": "images/3",
-                "slideCount": 10 // Укажи реальное количество слайдов
+                "slideCount": 10,
+                "isDownloadable": true
+            },
+            { 
+                "name": "Инфинитив и его грамматические свойства", 
+                "file": null, // Нет файла для скачивания
+                "slidesFolder": "",
+                "slideCount": 3,
+                "isDownloadable": false
+            },
+            { 
+                "name": "Тринадцатый подвиг Геракла", 
+                "file": "iskander6.pptx",
+                "slidesFolder": "images/5",
+                "slideCount": 8, // Укажи реальное количество слайдов
+                "isDownloadable": true
             }
         ];
 
@@ -220,7 +262,7 @@
 
         // Функция для отображения страницы урока
         function showLessonPage(lesson) {
-            document.getElementById('main-page').style.display = 'none';
+            document.getElementById('main-page').style.display = 'none-0;
             document.getElementById('lesson-page').style.display = 'flex';
 
             currentLesson = lesson;
@@ -229,9 +271,17 @@
             document.getElementById('lesson-title').textContent = lesson.name;
             updateSlide();
 
-            const downloadLink = document.getElementById('download-link');
-            downloadLink.href = `${lesson.file}`;
-            downloadLink.setAttribute('download', lesson.file);
+            // Показываем или скрываем кнопку скачивания
+            const downloadButtonContainer = document.getElementById('download-button-container');
+            downloadButtonContainer.innerHTML = '';
+            if (lesson.isDownloadable) {
+                const downloadLink = document.createElement('a');
+                downloadLink.className = 'download-button';
+                downloadLink.textContent = 'Установить материалы';
+                downloadLink.href = lesson.file;
+                downloadLink.setAttribute('download', lesson.file);
+                downloadButtonContainer.appendChild(downloadLink);
+            }
         }
 
         // Функция для обновления текущего слайда
@@ -273,6 +323,26 @@
             currentLesson = null;
             currentSlide = 1;
         }
+
+        // Полноэкранный просмотр
+        const previewArea = document.getElementById('preview-area');
+        const fullscreenView = document.getElementById('fullscreen-view');
+        const fullscreenImage = document.getElementById('fullscreen-image');
+
+        previewArea.addEventListener('click', () => {
+            fullscreenImage.src = document.getElementById('preview-image').src;
+            fullscreenView.style.display = 'flex';
+        });
+
+        fullscreenView.addEventListener('click', () => {
+            fullscreenView.style.display = 'none';
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && fullscreenView.style.display === 'flex') {
+                fullscreenView.style.display = 'none';
+            }
+        });
 
         // Инициализация
         displayButtons();
