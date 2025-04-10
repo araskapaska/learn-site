@@ -172,8 +172,8 @@
                 <img id="preview-image" src="" alt="Слайд">
             </div>
             <div class="navigation">
-                <button id="prev-arrow" class="arrow" onclick="prevSlide()">&#9664;</button>
-                <button id="next-arrow" class="arrow" onclick="nextSlide()">&#9654;</button>
+                <button id="prev-arrow" class="arrow" onclick="prevSlide()">◀</button>
+                <button id="next-arrow" class="arrow" onclick="nextSlide()">▶</button>
             </div>
             <a id="download-link" class="download-button" href="#">Установить материалы</a>
         </div>
@@ -185,16 +185,20 @@
             { 
                 "name": "Глагол", 
                 "file": "glagol.pptx",
-                "downloadUrl": "", // Замени на реальную ссылку для скачивания
-                "slidesFolder": "images/1", // Папка с изображениями слайдов (пока заглушка)
-                "slideCount": 0 // Количество слайдов (пока 0)
+                "slidesFolder": "images/1",
+                "slideCount": 0 // Укажи количество слайдов, если есть
             },
             { 
                 "name": "НЕ с глаголами", 
                 "file": "ne_s_glagolami.pptx",
-                "downloadUrl": "https://drive.google.com/uc?export=download&id=1xyfqDo_gt7bPMeZFdt91H1divbO0jVyf",
-                "slidesFolder": "images/2", // Папка с изображениями слайдов
-                "slideCount": 17 // Количество слайдов
+                "slidesFolder": "images/2",
+                "slideCount": 17
+            },
+            { 
+                "name": "Девочка, с которой ничего не случится", 
+                "file": "k.bulychev_5_klass.pptx",
+                "slidesFolder": "images/3",
+                "slideCount": 10 // Укажи реальное количество слайдов
             }
         ];
 
@@ -226,12 +230,8 @@
             updateSlide();
 
             const downloadLink = document.getElementById('download-link');
-            if (lesson.downloadUrl) {
-                downloadLink.href = lesson.downloadUrl;
-            } else {
-                downloadLink.href = `presentations/${lesson.file}`;
-                downloadLink.setAttribute('download', lesson.file);
-            }
+            downloadLink.href = `presentations/${lesson.file}`;
+            downloadLink.setAttribute('download', lesson.file);
         }
 
         // Функция для обновления текущего слайда
